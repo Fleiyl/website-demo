@@ -1,145 +1,266 @@
 /*
-	Solid State by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+    MEAS Laboratory Website
+    Based on Solid State by HTML5 UP
 */
 
 (function($) {
 
-	var	$window = $(window),
-		$body = $('body'),
-		$header = $('#header'),
-		$banner = $('#banner');
+    var $window = $(window),
+        $body = $('body'),
+        $header = $('#header'),
+        $banner = $('#banner');
 
-	// Breakpoints.
-		breakpoints({
-			xlarge:	'(max-width: 1680px)',
-			large:	'(max-width: 1280px)',
-			medium:	'(max-width: 980px)',
-			small:	'(max-width: 736px)',
-			xsmall:	'(max-width: 480px)'
-		});
 
-	// Play initial animations on page load.
-		$window.on('load', function() {
-			window.setTimeout(function() {
-				$body.removeClass('is-preload');
-			}, 100);
-		});
+    // ============================================================
+    // Breakpoints
+    // ============================================================
 
-	// Header.
-		if ($banner.length > 0
-		&&	$header.hasClass('alt')) {
+    breakpoints({
+        xlarge: '(max-width: 1680px)',
+        large:  '(max-width: 1280px)',
+        medium: '(max-width: 980px)',
+        small:  '(max-width: 736px)',
+        xsmall: '(max-width: 480px)'
+    });
 
-			$window.on('resize', function() { $window.trigger('scroll'); });
 
-			$banner.scrollex({
-				bottom:		$header.outerHeight(),
-				terminate:	function() { $header.removeClass('alt'); },
-				enter:		function() { $header.addClass('alt'); },
-				leave:		function() { $header.removeClass('alt'); }
-			});
+    // ============================================================
+    // Initial Page Animation
+    // ============================================================
 
-		}
+    $window.on('load', function() {
 
-	// Menu.
-		var $menu = $('#menu');
+        window.setTimeout(function() {
 
-		$menu._locked = false;
+            $body.removeClass('is-preload');
 
-		$menu._lock = function() {
+        }, 100);
 
-			if ($menu._locked)
-				return false;
+    });
 
-			$menu._locked = true;
 
-			window.setTimeout(function() {
-				$menu._locked = false;
-			}, 350);
+    // ============================================================
+    // Header
+    // ============================================================
 
-			return true;
+    if (
+        $banner.length > 0 &&
+        $header.hasClass('alt')
+    ) {
 
-		};
+        $window.on('resize', function() {
 
-		$menu._show = function() {
+            $window.trigger('scroll');
 
-			if ($menu._lock())
-				$body.addClass('is-menu-visible');
+        });
 
-		};
 
-		$menu._hide = function() {
+        $banner.scrollex({
 
-			if ($menu._lock())
-				$body.removeClass('is-menu-visible');
+            bottom: $header.outerHeight(),
 
-		};
+            terminate: function() {
 
-		$menu._toggle = function() {
+                $header.removeClass('alt');
 
-			if ($menu._lock())
-				$body.toggleClass('is-menu-visible');
+            },
 
-		};
+            enter: function() {
 
-		$menu
-			.appendTo($body)
-			.on('click', function(event) {
+                $header.addClass('alt');
 
-				event.stopPropagation();
+            },
 
-				// Hide.
-					$menu._hide();
+            leave: function() {
 
-			})
-			.find('.inner')
-				.on('click', '.close', function(event) {
+                $header.removeClass('alt');
 
-					event.preventDefault();
-					event.stopPropagation();
-					event.stopImmediatePropagation();
+            }
 
-					// Hide.
-						$menu._hide();
+        });
 
-				})
-				.on('click', function(event) {
-					event.stopPropagation();
-				})
-				.on('click', 'a', function(event) {
+    }
 
-					var href = $(this).attr('href');
 
-					event.preventDefault();
-					event.stopPropagation();
+    // ============================================================
+    // MEAS Navigation Menu
+    // Solid State menu mechanism is preserved.
+    // ============================================================
 
-					// Hide.
-						$menu._hide();
+    var $menu = $('#menu');
 
-					// Redirect.
-						window.setTimeout(function() {
-							window.location.href = href;
-						}, 350);
 
-				});
+    // Prevent multiple menu actions
+    // from being triggered too quickly.
 
-		$body
-			.on('click', 'a[href="#menu"]', function(event) {
+    $menu._locked = false;
 
-				event.stopPropagation();
-				event.preventDefault();
 
-				// Toggle.
-					$menu._toggle();
+    $menu._lock = function() {
 
-			})
-			.on('keydown', function(event) {
+        if ($menu._locked) {
 
-				// Hide on escape.
-					if (event.keyCode == 27)
-						$menu._hide();
+            return false;
 
-			});
+        }
+
+        $menu._locked = true;
+
+
+        window.setTimeout(function() {
+
+            $menu._locked = false;
+
+        }, 350);
+
+
+        return true;
+
+    };
+
+
+    // Show menu
+
+    $menu._show = function() {
+
+        if ($menu._lock()) {
+
+            $body.addClass('is-menu-visible');
+
+        }
+
+    };
+
+
+    // Hide menu
+
+    $menu._hide = function() {
+
+        if ($menu._lock()) {
+
+            $body.removeClass('is-menu-visible');
+
+        }
+
+    };
+
+
+    // Toggle menu
+
+    $menu._toggle = function() {
+
+        if ($menu._lock()) {
+
+            $body.toggleClass('is-menu-visible');
+
+        }
+
+    };
+
+
+    // ============================================================
+    // Menu Interaction
+    // ============================================================
+
+    $menu
+        .appendTo($body)
+
+        .on('click', function(event) {
+
+            event.stopPropagation();
+
+            // Hide menu
+            $menu._hide();
+
+        })
+
+
+        .find('.inner')
+
+
+        // Close button
+        .on('click', '.close', function(event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+
+
+            // Hide menu
+            $menu._hide();
+
+        })
+
+
+        // Prevent clicks inside menu
+        // from closing the menu.
+
+        .on('click', function(event) {
+
+            event.stopPropagation();
+
+        })
+
+
+        // Navigation links
+
+        .on('click', 'a', function(event) {
+
+            var href = $(this).attr('href');
+
+
+            event.preventDefault();
+            event.stopPropagation();
+
+
+            // Hide menu
+
+            $menu._hide();
+
+
+            // Navigate after menu animation
+
+            window.setTimeout(function() {
+
+                window.location.href = href;
+
+            }, 350);
+
+        });
+
+
+    // ============================================================
+    // Menu Trigger & Keyboard Interaction
+    // ============================================================
+
+    $body
+
+        // Menu button
+
+        .on('click', 'a[href="#menu"]', function(event) {
+
+            event.stopPropagation();
+            event.preventDefault();
+
+
+            // Toggle menu
+
+            $menu._toggle();
+
+        })
+
+
+        // Close menu with Escape key
+
+        .on('keydown', function(event) {
+
+            if (event.keyCode == 27) {
+
+                $menu._hide();
+
+            }
+
+        });
+
 
 })(jQuery);
